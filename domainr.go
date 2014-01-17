@@ -34,7 +34,7 @@ func main() {
 
 	var sr SearchResults
 
-	// Decode json string into custom Go data types.
+	// Decode json string into custom structs.
 	json.Unmarshal(body, &sr)
 
 	// Print results to stdout
