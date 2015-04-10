@@ -4,9 +4,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
+)
+
+const (
+	apiURL = "https://domai.nr/api/json/search?client_id=domainr_command_line_app&q="
 )
 
 type Result struct {
@@ -22,15 +25,24 @@ type SearchResults struct {
 func main() {
 
 	if len(os.Args) < 2 {
-		log.Fatal("Missing search query. Specify a string to search domainr for.")
+		fmt.Println("Missing search query. Specify a string to search domainr for.")
+		os.Exit(1)
 	}
 
 	var query string = os.Args[1]
 
-	httpResponse, _ := http.Get("https://domai.nr/api/json/search?client_id=domainr_command_line_app&q=" + query)
+	httpResponse, err := http.Get(apiURL + query)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 
 	defer httpResponse.Body.Close()
-	body, _ := ioutil.ReadAll(httpResponse.Body)
+	body, err := ioutil.ReadAll(httpResponse.Body)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 
 	var sr SearchResults
 
