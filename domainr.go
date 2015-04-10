@@ -26,7 +26,7 @@ type SearchResults struct {
 func main() {
 
 	if len(os.Args) < 2 {
-		fmt.Println("Missing search query. Specify a string to search domainr for.")
+		fmt.Fprint(os.Stderr, "Missing search query. Specify a string to search domainr for.")
 		os.Exit(1)
 	}
 
@@ -34,14 +34,14 @@ func main() {
 
 	httpResponse, err := http.Get(apiURL + query)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Fprint(os.Stderr, err)
 		os.Exit(1)
 	}
 
 	defer httpResponse.Body.Close()
 	body, err := ioutil.ReadAll(httpResponse.Body)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Fprint(os.Stderr, err)
 		os.Exit(1)
 	}
 
