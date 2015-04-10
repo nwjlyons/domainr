@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -49,8 +50,10 @@ func main() {
 	// Decode json string into custom structs.
 	json.Unmarshal(body, &sr)
 
+	buf := bufio.NewWriter(os.Stdout)
+
 	// Print results to stdout
-	fmt.Printf("\n Results for \"%s\"\n\n", sr.Query)
+	fmt.Fprintf(buf, "\n Results for \"%s\"\n\n", sr.Query)
 	for _, result := range sr.Results {
 		var available string
 		switch result.Availability {
@@ -59,7 +62,8 @@ func main() {
 		default:
 			available = "✘"
 		}
-		fmt.Printf("     %s %s\n", available, result.Domain)
+		fmt.Fprintf(buf, "     %s %s\n", available, result.Domain)
 	}
-	fmt.Printf("\n")
+	fmt.Fprintf(buf, "\n")
+	buf.Flush()
 }
